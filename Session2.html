@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sesi 2: Dasar-Dasar Pemrograman Delphi</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <!-- Font Awesome untuk Icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #002d52;
+            --secondary-color: #e63946; /* Warna pembeda untuk sesi 2 */
+            --text-dark: #1e293b;
+            --text-light: #64748b;
+            --bg-slide: #ffffff;
+            --bg-body: #f1f5f9;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: var(--bg-body);
+            overflow: hidden;
+        }
+
+        .slides-wrapper {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+
+        .slide {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 60px;
+            background-color: var(--bg-slide);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+            z-index: 1;
+        }
+
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+            z-index: 10;
+        }
+
+        .slide::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 10px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        }
+
+        h1, h2, h3 {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--primary-color);
+        }
+
+        .title-main { font-size: 3.5rem; text-align: center; margin-bottom: 20px; }
+        .subtitle { font-size: 1.5rem; color: var(--secondary-color); margin-bottom: 40px; text-align: center; }
+        
+        .slide-title {
+            position: absolute;
+            top: 50px;
+            left: 60px;
+            font-size: 2rem;
+            border-left: 5px solid var(--secondary-color);
+            padding-left: 15px;
+            text-transform: uppercase;
+        }
+
+        .content {
+            width: 85%;
+            max-width: 1000px;
+            margin-top: 40px;
+        }
+
+        p, li {
+            font-size: 1.2rem;
+            color: var(--text-dark);
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .accent { color: var(--secondary-color); font-weight: bold; }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .card {
+            background: #f8fafc;
+            padding: 30px;
+            border-radius: 12px;
+            border-top: 4px solid var(--secondary-color);
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        .card i {
+            font-size: 2.5rem;
+            color: var(--secondary-color);
+            margin-bottom: 20px;
+        }
+
+        .controls {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            gap: 15px;
+            z-index: 100;
+        }
+
+        .btn-nav {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.2rem;
+            transition: transform 0.2s, background 0.2s;
+        }
+
+        .btn-nav:hover {
+            background: var(--secondary-color);
+            transform: scale(1.1);
+        }
+
+        .progress-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: #e2e8f0;
+            z-index: 101;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--secondary-color);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .slide-number {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            font-size: 1rem;
+            color: var(--text-light);
+            z-index: 100;
+        }
+
+        code {
+            background: #272822;
+            color: #f8f8f2;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-family: 'Courier New', Courier, monospace;
+            display: inline-block;
+            margin: 5px 0;
+        }
+
+        pre {
+            background: #272822;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-size: 0.9rem;
+            margin: 15px 0;
+        }
+
+        @media (max-width: 768px) {
+            .slide { padding: 30px; }
+            .title-main { font-size: 2rem; }
+            .grid-2 { grid-template-columns: 1fr; }
+            .slide-title { top: 20px; left: 20px; font-size: 1.2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="slides-wrapper">
+        <!-- Slide 1: Cover -->
+        <div class="slide active" id="slide-1">
+            <h1 class="title-main">Fundamental Programming <br> with Delphi</h1>
+            <p class="subtitle">Sesi 2: Dasar-Dasar Algoritma & Pascal</p>
+            <div style="text-align: center;">
+                <p>Oleh: <strong>Muhammad Ikhwan Fathulloh</strong></p>
+            </div>
+        </div>
+
+        <!-- Slide 2: Variabel & Tipe Data -->
+        <div class="slide" id="slide-2">
+            <h2 class="slide-title">Variabel & Tipe Data</h2>
+            <div class="content">
+                <p>Variabel adalah wadah penyimpanan data. Delphi bersifat <em>Strongly Typed</em>.</p>
+                <div class="grid-2">
+                    <div class="card">
+                        <h3>Tipe Data Umum</h3>
+                        <ul>
+                            <li><span class="accent">Integer</span>: Angka bulat (1, 100, -5).</li>
+                            <li><span class="accent">String</span>: Teks / Kata ("Halo").</li>
+                            <li><span class="accent">Double</span>: Angka desimal (3.14).</li>
+                            <li><span class="accent">Boolean</span>: True atau False.</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <p>Deklarasi Variabel:</p>
+                        <pre>var
+  Nama: String;
+  Umur: Integer;
+begin
+  Nama := 'Ikhwan';
+  Umur := 25;
+end;</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: Konversi Tipe Data -->
+        <div class="slide" id="slide-3">
+            <h2 class="slide-title">Konversi Tipe Data</h2>
+            <div class="content">
+                <p>Karena Delphi ketat soal tipe data, kita sering butuh konversi:</p>
+                <div class="card" style="margin-bottom: 20px;">
+                    <ul style="list-style: none;">
+                        <li><i class="fa-solid fa-sync accent"></i> <code>IntToStr(10)</code> &rarr; Angka ke Teks</li>
+                        <li><i class="fa-solid fa-sync accent"></i> <code>StrToInt('10')</code> &rarr; Teks ke Angka</li>
+                        <li><i class="fa-solid fa-sync accent"></i> <code>FloatToStr(3.14)</code> &rarr; Desimal ke Teks</li>
+                    </ul>
+                </div>
+                <p>Penting saat mengambil input dari <code>TEdit.Text</code> (String) untuk perhitungan matematika.</p>
+            </div>
+        </div>
+
+        <!-- Slide 4: Percabangan (If Then Else) -->
+        <div class="slide" id="slide-4">
+            <h2 class="slide-title">Logika Percabangan</h2>
+            <div class="content">
+                <p>Gunakan <code>if</code> untuk mengambil keputusan dalam program.</p>
+                <pre>if Umur >= 17 then
+begin
+  ShowMessage('Boleh membuat SIM');
+end
+else
+begin
+  ShowMessage('Belum cukup umur');
+end;</pre>
+                <p><i class="fa-solid fa-circle-info accent"></i> Ingat: Jangan beri titik koma (<code>;</code>) sebelum kata kunci <code>else</code>.</p>
+            </div>
+        </div>
+
+        <!-- Slide 5: Perulangan (Loops) -->
+        <div class="slide" id="slide-5">
+            <h2 class="slide-title">Perulangan (Looping)</h2>
+            <div class="content">
+                <div class="grid-2">
+                    <div class="card">
+                        <h3>FOR Loop</h3>
+                        <p>Digunakan saat jumlah perulangan sudah pasti.</p>
+                        <pre>for i := 1 to 5 do
+begin
+  // Aksi di sini
+end;</pre>
+                    </div>
+                    <div class="card">
+                        <h3>WHILE Loop</h3>
+                        <p>Berulang selama kondisi masih benar.</p>
+                        <pre>while (Stok > 0) do
+begin
+  // Aksi di sini
+end;</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Latihan Mandiri -->
+        <div class="slide" id="slide-6">
+            <h2 class="slide-title">Latihan Sesi 2</h2>
+            <div class="content">
+                <div class="card">
+                    <h3>Tantangan: Kalkulator Usia</h3>
+                    <ol style="margin-left: 20px; margin-top: 10px;">
+                        <li>Buat 1 <strong>TEdit</strong> untuk input Tahun Lahir.</li>
+                        <li>Buat 1 <strong>TButton</strong> "Hitung".</li>
+                        <li>Saat diklik, hitung usia (Tahun Sekarang - Tahun Lahir).</li>
+                        <li>Tampilkan pesan: "Usia Anda X tahun. Anda termasuk Dewasa/Anak-anak".</li>
+                    </ol>
+                </div>
+                <p style="text-align: center; margin-top: 30px;">
+                    <i class="fa-solid fa-brain accent" style="font-size: 3rem;"></i>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigasi -->
+    <div class="slide-number"><span id="current-num">1</span> / 6</div>
+    <div class="progress-container"><div class="progress-bar" id="progress"></div></div>
+
+    <div class="controls">
+        <button class="btn-nav" id="prevBtn"><i class="fa-solid fa-arrow-left"></i></button>
+        <button class="btn-nav" id="nextBtn"><i class="fa-solid fa-arrow-right"></i></button>
+    </div>
+
+    <script>
+        const slides = document.querySelectorAll('.slide');
+        const nextBtn = document.getElementById('nextBtn');
+        const prevBtn = document.getElementById('prevBtn');
+        const progress = document.getElementById('progress');
+        const currentNumDisplay = document.getElementById('current-num');
+        
+        let currentSlide = 0;
+
+        function updateSlide() {
+            slides.forEach((slide, index) => {
+                slide.classList.toggle('active', index === currentSlide);
+            });
+            
+            currentNumDisplay.innerText = currentSlide + 1;
+            const percent = ((currentSlide) / (slides.length - 1)) * 100;
+            progress.style.width = percent + '%';
+        }
+
+        nextBtn.addEventListener('click', () => {
+            if (currentSlide < slides.length - 1) {
+                currentSlide++;
+                updateSlide();
+            }
+        });
+
+        prevBtn.addEventListener('click', () => {
+            if (currentSlide > 0) {
+                currentSlide--;
+                updateSlide();
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                if (currentSlide < slides.length - 1) {
+                    currentSlide++;
+                    updateSlide();
+                }
+            } else if (e.key === 'ArrowLeft') {
+                if (currentSlide > 0) {
+                    currentSlide--;
+                    updateSlide();
+                }
+            }
+        });
+    </script>
+</body>
+</html>
