@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sesi 12: Deployment & Distribusi Aplikasi</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <!-- Font Awesome untuk Icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #002d52;
+            --secondary-color: #fb8500; /* Warna pembeda untuk sesi 12 (Launch Orange) */
+            --text-dark: #1e293b;
+            --text-light: #64748b;
+            --bg-slide: #ffffff;
+            --bg-body: #f1f5f9;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: var(--bg-body);
+            overflow: hidden;
+        }
+
+        .slides-wrapper {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+
+        .slide {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 60px;
+            background-color: var(--bg-slide);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+            z-index: 1;
+        }
+
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+            z-index: 10;
+        }
+
+        .slide::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 10px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        }
+
+        h1, h2, h3 {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--primary-color);
+        }
+
+        .title-main { font-size: 3.5rem; text-align: center; margin-bottom: 20px; }
+        .subtitle { font-size: 1.5rem; color: var(--secondary-color); margin-bottom: 40px; text-align: center; }
+        
+        .slide-title {
+            position: absolute;
+            top: 50px;
+            left: 60px;
+            font-size: 2rem;
+            border-left: 5px solid var(--secondary-color);
+            padding-left: 15px;
+            text-transform: uppercase;
+        }
+
+        .content {
+            width: 85%;
+            max-width: 1000px;
+            margin-top: 40px;
+        }
+
+        p, li {
+            font-size: 1.2rem;
+            color: var(--text-dark);
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .accent { color: var(--secondary-color); font-weight: bold; }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .card {
+            background: #f8fafc;
+            padding: 30px;
+            border-radius: 12px;
+            border-top: 4px solid var(--secondary-color);
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        .card i {
+            font-size: 2.5rem;
+            color: var(--secondary-color);
+            margin-bottom: 20px;
+        }
+
+        .controls {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            gap: 15px;
+            z-index: 100;
+        }
+
+        .btn-nav {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.2rem;
+            transition: transform 0.2s, background 0.2s;
+        }
+
+        .btn-nav:hover {
+            background: var(--secondary-color);
+            transform: scale(1.1);
+        }
+
+        .progress-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: #e2e8f0;
+            z-index: 101;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--secondary-color);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .slide-number {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            font-size: 1rem;
+            color: var(--text-light);
+            z-index: 100;
+        }
+
+        pre {
+            background: #272822;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-size: 0.9rem;
+            margin: 15px 0;
+        }
+
+        @media (max-width: 768px) {
+            .slide { padding: 30px; }
+            .title-main { font-size: 2rem; }
+            .grid-2 { grid-template-columns: 1fr; }
+            .slide-title { top: 20px; left: 20px; font-size: 1.2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="slides-wrapper">
+        <!-- Slide 1: Cover -->
+        <div class="slide active" id="slide-1">
+            <h1 class="title-main">Fundamental Programming <br> with Delphi</h1>
+            <p class="subtitle">Sesi 12: Deployment & Distribusi Aplikasi</p>
+            <div style="text-align: center;">
+                <p>Oleh: <strong>Muhammad Ikhwan Fathulloh</strong></p>
+            </div>
+        </div>
+
+        <!-- Slide 2: Debug vs Release -->
+        <div class="slide" id="slide-2">
+            <h2 class="slide-title">Debug vs Release Mode</h2>
+            <div class="content">
+                <div class="grid-2">
+                    <div class="card">
+                        <i class="fa-solid fa-bug"></i>
+                        <h3>Debug</h3>
+                        <p>Digunakan saat pengembangan. File .exe lebih besar karena mengandung informasi simbolik untuk debugging.</p>
+                    </div>
+                    <div class="card">
+                        <i class="fa-solid fa-box-open"></i>
+                        <h3>Release</h3>
+                        <p>Digunakan untuk distribusi. Compiler melakukan optimasi kode sehingga file .exe lebih kecil dan berjalan lebih cepat.</p>
+                    </div>
+                </div>
+                <p style="margin-top: 20px;"><i class="fa-solid fa-circle-info accent"></i> Selalu gunakan mode <strong>Release</strong> sebelum mengirim file ke client.</p>
+            </div>
+        </div>
+
+        <!-- Slide 3: Project Options -->
+        <div class="slide" id="slide-3">
+            <h2 class="slide-title">Konfigurasi Project</h2>
+            <div class="content">
+                <p>Sebelum mempublikasikan, atur identitas aplikasi Anda di <span class="accent">Project > Options</span>:</p>
+                <ul style="margin-left: 20px;">
+                    <li><strong>Application Icons:</strong> Ganti icon standar Delphi dengan icon brand Anda (.ico).</li>
+                    <li><strong>Version Info:</strong> Atur Version Number, Company Name, dan File Description.</li>
+                    <li><strong>Manifest:</strong> Pastikan "Enable Runtime Themes" dicentang agar UI terlihat modern di Windows terbaru.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 4: Dependency Check -->
+        <div class="slide" id="slide-4">
+            <h2 class="slide-title">Ketergantungan File (Dependencies)</h2>
+            <div class="content">
+                <div class="card">
+                    <h3>Kenapa aplikasi tidak mau jalan di komputer lain?</h3>
+                    <p>Meskipun Delphi menghasilkan file "Standalone", beberapa fitur membutuhkan file tambahan:</p>
+                </div>
+                <ul style="margin-top: 15px; list-style: none;">
+                    <li><i class="fa-solid fa-database accent"></i> <strong>Database:</strong> Client mesin DB atau file SQLite (.db) harus disertakan.</li>
+                    <li><i class="fa-solid fa-file-invoice accent"></i> <strong>Reports:</strong> File desain laporan (misal: .fr3 di FastReport).</li>
+                    <li><i class="fa-solid fa-shield-halved accent"></i> <strong>SSL:</strong> File <code>libeay32.dll</code> dan <code>ssleay32.dll</code> untuk koneksi HTTPS/REST.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 5: Membuat Installer -->
+        <div class="slide" id="slide-5">
+            <h2 class="slide-title">Distribusi & Installer</h2>
+            <div class="content">
+                <p>Jangan hanya mengirim file .exe mentah. Gunakan tool pembuatan Installer agar terlihat profesional:</p>
+                <div class="grid-2">
+                    <div class="card">
+                        <h3>Inno Setup</h3>
+                        <p>Tool gratis dan paling populer untuk Delphi. Sangat ringan dan menggunakan script sederhana.</p>
+                    </div>
+                    <div class="card">
+                        <h3>NSIS</h3>
+                        <p>Alternatif lain yang powerful untuk membuat paket instalasi Windows.</p>
+                    </div>
+                </div>
+                <p style="margin-top: 20px;"><i class="fa-solid fa-check-double accent"></i> Installer memastikan semua file pendukung (DLL, Assets) terpasang di folder yang benar.</p>
+            </div>
+        </div>
+
+        <!-- Slide 6: Penutup & Sertifikasi -->
+        <div class="slide" id="slide-6">
+            <h2 class="slide-title">Selamat! Anda Telah Selesai</h2>
+            <div class="content">
+                <div style="text-align: center;">
+                    <i class="fa-solid fa-graduation-cap accent" style="font-size: 5rem; margin-bottom: 20px;"></i>
+                    <h3>Anda telah menguasai fundamental Delphi</h3>
+                    <p>Dari variabel, database, hingga keamanan dan distribusi aplikasi.</p>
+                    <div class="card" style="display: inline-block; margin-top: 20px; text-align: left;">
+                        <p><strong>Apa selanjutnya?</strong></p>
+                        <ul style="font-size: 1rem;">
+                            <li>Pelajari Design Pattern (Singleton, Factory, dll).</li>
+                            <li>Eksplorasi Mobile Development dengan FMX.</li>
+                            <li>Ikuti komunitas Delphi internasional.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigasi -->
+    <div class="slide-number"><span id="current-num">1</span> / 6</div>
+    <div class="progress-container"><div class="progress-bar" id="progress"></div></div>
+
+    <div class="controls">
+        <button class="btn-nav" id="prevBtn"><i class="fa-solid fa-arrow-left"></i></button>
+        <button class="btn-nav" id="nextBtn"><i class="fa-solid fa-arrow-right"></i></button>
+    </div>
+
+    <script>
+        const slides = document.querySelectorAll('.slide');
+        const nextBtn = document.getElementById('nextBtn');
+        const prevBtn = document.getElementById('prevBtn');
+        const progress = document.getElementById('progress');
+        const currentNumDisplay = document.getElementById('current-num');
+        
+        let currentSlide = 0;
+
+        function updateSlide() {
+            slides.forEach((slide, index) => {
+                slide.classList.toggle('active', index === currentSlide);
+            });
+            
+            currentNumDisplay.innerText = currentSlide + 1;
+            const percent = ((currentSlide) / (slides.length - 1)) * 100;
+            progress.style.width = percent + '%';
+        }
+
+        nextBtn.addEventListener('click', () => {
+            if (currentSlide < slides.length - 1) {
+                currentSlide++;
+                updateSlide();
+            }
+        });
+
+        prevBtn.addEventListener('click', () => {
+            if (currentSlide > 0) {
+                currentSlide--;
+                updateSlide();
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                if (currentSlide < slides.length - 1) {
+                    currentSlide++;
+                    updateSlide();
+                }
+            } else if (e.key === 'ArrowLeft') {
+                if (currentSlide > 0) {
+                    currentSlide--;
+                    updateSlide();
+                }
+            }
+        });
+    </script>
+</body>
+</html>
